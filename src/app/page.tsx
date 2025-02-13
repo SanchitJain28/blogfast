@@ -1,37 +1,25 @@
-import Image from "next/image";
-import { signIn } from "@/auth"
-import { auth } from "../auth"
-import { signOut } from "@/auth"
 import Link from "next/link";
+import { createClient } from "./utils/supabase/server";
+import SignOutButton from "./components/signOut/page";
 
 export default async function Home() {
-  const session = await auth()
-  if (session) {
-    return <div className="">
-      <h1>You habe been signed in chigga</h1>
-      <form
-        action={async () => {
-          "use server"
-          await signOut()
-        }}
-      >
-        <button type="submit">Signout with google</button>
-
-      </form>
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.getUser()
+  if (error) {
+    return <h1>Sorry an error happened</h1>
+  }
+  const user = data.user
+  if (user) {
+    return <div className="p-20">
+      <h1 className="text-white text-xl text-center font-mono">Hey Welcome to the fuuckin home page you habe been signed in</h1>
+      {/* <SignOutButton/> */}
     </div>
   }
-
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <form
-        action={async () => {
-          "use server"
-          await signIn("google")
-        }}
-      >
-        <button type="submit">Signin with Google</button>
-        <Link href={"login"}>Sign Up</Link>
-      </form>
+    <div className="p-20">
+      <h1 className="text-white text-xl text-center font-mono">Hey Welcome to the fuuckin home page</h1>
+      <Link href={"login"} className="mx-4 text-white font-sans text-lg p-4 bg-black border border-zinc-700 rounded">Login</Link>
+      <Link href={"signup"} className=" mx-4 text-white font-sans text-lg p-4 bg-black border border-zinc-700 rounded">SignUp </Link>
     </div>
   );
 }
