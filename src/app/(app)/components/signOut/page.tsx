@@ -3,13 +3,12 @@ import { createClient } from '@/app/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 
-export default async function SignOutButton() {
+export default function SignOutButton() {
     const router=useRouter()
-    const supabase =await  createClient()
+    const supabase =createClient()
     async function signOut() {
         const { error } = await supabase.auth.signOut()
         router.refresh(); // Refreshes the page to reflect auth changes
-
     }
     return (
         <div>
