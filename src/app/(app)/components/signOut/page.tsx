@@ -1,13 +1,16 @@
 "use client";
+import { authContext } from '@/app/context/AuthContext';
 import { createClient } from '@/app/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useContext } from 'react'
 
 export default function SignOutButton() {
+    const {user,setUser}=useContext(authContext)
     const router=useRouter()
     const supabase =createClient()
     async function signOut() {
         const { error } = await supabase.auth.signOut()
+        setUser(null)
         router.refresh(); // Refreshes the page to reflect auth changes
     }
     return (
