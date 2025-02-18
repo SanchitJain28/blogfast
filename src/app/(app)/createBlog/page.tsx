@@ -4,11 +4,19 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { headerSchemma } from '@/app/Schemmas/blogSchemma/schemma';
 export default function CreateBlog() {
   const { toast } = useToast()
   const [imagePreview, setImagePreview] = useState(''); // State for image prev
   // iew
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(headerSchemma),
+    defaultValues:{
+      title:"fuck that ass"
+    }
+  })
   const [imageUrl, setImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false)
@@ -65,7 +73,7 @@ export default function CreateBlog() {
   };
 
   // Handle form submission
-  const handleSubmit = (e: any) => {
+  const handleSubmitForm = (e: any) => {
     e.preventDefault();
     try {
       setIsUploading(true)
@@ -91,7 +99,7 @@ export default function CreateBlog() {
       <div className="flex justify-between">
         <div className="flex flex-col basis-2/3">
           {isUploadingImage && <Progress value={progress} className='my-4' />}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmitForm}>
             <label
               htmlFor="image"
               className="bg-black text-white border border-zinc-400 rounded-lg w-full py-2 px-4 cursor-pointer inline-block text-center"
@@ -126,30 +134,38 @@ export default function CreateBlog() {
         </div>
       </div>
       {/* CONTENT SECTION FOR THE BLOG */}
-      {headings.map((e,index:number) => {
-        return <div className="flex" key={index}>
-          <Input key={Math.random()} type='text' placeholder={`${e.title}`} onChange={(event)=>{
-            e.title=event.target.value
-          }} className='focus:outline-none my-4 bg-black text-white p-2 border border-zinc-700' />
-          <button onClick={()=>{
-            const filteredHeadings=headings.filter((heading)=>{
-              if(headings.length>3){
-                return heading.title!==e.title
-              }
-              toast({
-                title: "delete",
-                description: "minimum 3 heading are required",
-                className: "bg-red-700 text-black border-red-700"
-              })
-              return headings
-              
-            })
-            setHeadings(filteredHeadings)
-          }} className=' mx-4 bg-black text-white  rounded-lg'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
-        </div>
-      })}
+      <form onSubmit={handleSubmit(handleSubmitForm)}>
+        {headings.map((e, index: number) => {
+          return <div className="" key={index}>
+            <div className="flex" key={index}>
+            {/* onChange={(event) => {
+                e.title = event.target.value
+              }} */}
+              <Input key={Math.random()} type='text' placeholder={`${e.title}`} {...register("title")}  className='focus:outline-none my-4 bg-black text-white p-2 border border-zinc-700' />
+              <button onClick={() => {
+                const filteredHeadings = headings.filter((heading) => {
+                  if (headings.length > 3) {
+                    return heading.title !== e.title
+                  }
+                  toast({
+                    title: "delete",
+                    description: "minimum 3 heading are required",
+                    className: "bg-red-700 text-black border-red-700"
+                  })
+                  return headings
+
+                })
+                setHeadings(filteredHeadings)
+              }} className=' mx-4 bg-black text-white  rounded-lg'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-trash"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg></button>
+            </div>
+            <p className='text-white text-lg'>{errors.title?.message}</p>
+
+          </div>
+
+        })}
+      </form>
       <button onClick={() => {
-        setHeadings([...headings, { title: `heading ${headings.length+1}`, content: "" }])
+        setHeadings([...headings, { title: `heading ${headings.length + 1}`, content: "" }])
       }} className='bg-black text-white border p-4 border-blue-600 rounded-lg text-lg'>Add a heading</button>
     </div>
   );
