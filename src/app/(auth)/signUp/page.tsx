@@ -1,16 +1,15 @@
 "use client";
-import React, { useContext } from 'react'
+import React from 'react'
 import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation'
-import { authContext } from '@/app/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 
 export default function LoginPage() {
     const {toast}=useToast()
     const router = useRouter()
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit,  formState: { errors } } = useForm();
     const onsubmit = async (data: any) => {
         try {
             const response = await axios.post("/api/signUp", data)
