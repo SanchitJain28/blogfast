@@ -1,12 +1,11 @@
 "use client"
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { createClient } from '../utils/supabase/client'
-import axios, { AxiosError } from 'axios'
-import { useRouter } from 'next/router'
 
-export const authContext = createContext<any>(null)
 
-export function AuthContext({ children }: any) {
+export const authContext = createContext<any |null>(null)
+
+export function AuthContext({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null)
   const getUser = async () => {
     const supabase = createClient()
@@ -14,13 +13,13 @@ export function AuthContext({ children }: any) {
     setUser(user)
     console.log(user)
   }
-  
+  const[blogImage,setBlogImage]=useState(null)
   useEffect(() => {
     getUser()
   }, [])
 
   return (
-    <authContext.Provider value={{ user, setUser }}>
+    <authContext.Provider value={{ user, setUser,blogImage,setBlogImage }}>
       {children}
     </authContext.Provider>
   )

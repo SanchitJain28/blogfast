@@ -1,4 +1,3 @@
-import { google } from '@ai-sdk/google';
 import { NextRequest } from 'next/server';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateText } from 'ai';

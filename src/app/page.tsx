@@ -1,10 +1,8 @@
 "use client"
 import Link from "next/link";
-import SignOutButton from "./(app)/components/signOut/page";
 import { createClient } from "./utils/supabase/client";
 import { useContext, useEffect, useState } from "react";
 import { authContext } from "./context/AuthContext";
-import GoogleLogin from "./(auth)/googleLogin/page";
 
 
 export default function Home() {
@@ -20,7 +18,6 @@ export default function Home() {
   if (user) {
     return <div className="">
       <h1 className="text-white text-4xl text-center">You have signed in man {user.email}</h1>
-      <SignOutButton />
     </div>
   }
 
