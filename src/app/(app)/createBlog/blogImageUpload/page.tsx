@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react'
 
 export default function BlogImageUpload() {
-    const {blogImage}=useContext(authContext)
+    const {blogImage,setBlogImage}=useContext(authContext)
     const router=useRouter()
     const { toast } = useToast()
     const [imagePreview, setImagePreview] = useState(''); // State for image prev
@@ -45,6 +45,7 @@ export default function BlogImageUpload() {
                 console.log(data.secure_url)
                 if (data.secure_url) {
                     setImageUrl(data.secure_url); // Set the image URL
+                    setBlogImage(data.secure_url); // Set the
                     toast({
                         title: "image uploaded",
                         description: "image uploaded successfully ",

@@ -23,7 +23,7 @@ export default function AIBlog() {
     setIsProducing(true)
     const headingArray = data.heading.map((e) => { return e.title })
     
-    const prompt = `Write a blog such that it conatins all the essientials heading i am providing in an array here is an array ${[headingArray]} the blog should be such that is should use easy words and easy understandable grammer ,it should also follow all the seo strategies and should be should be seo rich and should contain all the essiantial keywords that is repeating in the this heading array,the blog content should be p,h1,h2,h3,h4 or list tage ,do not make a html template `
+    const prompt = `Write a blog such that it conatins all the essientials heading i am providing in an array here is an array ${[headingArray]} the blog should be such that is should use easy words and easy understandable grammer ,it should also follow all the seo strategies and should be should be seo rich and should contain all the essiantial keywords that is repeating in the this heading array,the blog content should be p,h1,h2,h3,h4 or list tage ,do not make a html template ,the presention of the blog should be beautiful ,use emojis don't use ** or # this to start a heading,use emojis such that the blog should look beautiful`
     console.log(headingArray,prompt)
 
     const response=await axios.post("/api/AIshit",{
@@ -66,9 +66,9 @@ export default function AIBlog() {
         }} className='p-4 border border-zinc-600 text-white text-lg rounded-lg'>Add heading</button>
         <button type='submit' disabled={isProducing} className='text-white' >Submit </button>
         <p className='text-white text-lg'>{isProducing?"Producing results":""}</p>
-        <div dangerouslySetInnerHTML={{ __html: AiBlog?AiBlog:"" }} className='text-white text-xl'/>
+        {/* <div dangerouslySetInnerHTML={{ __html: AiBlog?AiBlog:"" }} className='text-white text-xl'/> */}
 
-        <p className='text-white text-lg'>{AiBlog?AiBlog:""}</p>
+        <div className='text-white border border-zinc-400 focus:outline-none rounded-lg my-4 p-4 bg-black text-lg w-full min-h-40 ' dangerouslySetInnerHTML={{__html:AiBlog?AiBlog:""}} />
       </form>
     </div>
 

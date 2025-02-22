@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
             .insert({
                 blog_content: content,
                 images:{
-                    imageURLs:[]
+                    imageURLs:[images]
                 },
                 createdBy:user?.id,
                 style:{}
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         return NextResponse.json({
             success: false,
-            message: "Sorry an unexpected error occured"
+            message: "Sorry an unexpected error occured"+error
         }, { status: 404 })
     }
 
