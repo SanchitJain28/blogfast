@@ -17,7 +17,10 @@ export default function Home() {
   }, [])
   if (user) {
     return <div className="">
-      <h1 className="text-white text-4xl text-center">You have signed in man {user.email}</h1>
+      <h1 className="text-white text-4xl text-center">
+        You have signed in man {user.email}
+        
+      </h1>
     </div>
   }
 

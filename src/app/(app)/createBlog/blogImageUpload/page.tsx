@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react'
 
 export default function BlogImageUpload() {
-    const {blogImage,setBlogImage}=useContext(authContext)
+    const {setBlogImage}=useContext(authContext)
     const router=useRouter()
     const { toast } = useToast()
     const [imagePreview, setImagePreview] = useState(''); // State for image prev
@@ -24,10 +24,8 @@ export default function BlogImageUpload() {
         if (file) {
             setIsUploadingImage(true)
             setProgress(20)
-            
             const previewUrl = URL.createObjectURL(file);
             setImagePreview(previewUrl); // Set the preview URL
-
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', 'blog_images'); // Replace with your upload preset
@@ -46,6 +44,7 @@ export default function BlogImageUpload() {
                 if (data.secure_url) {
                     setImageUrl(data.secure_url); // Set the image URL
                     setBlogImage(data.secure_url); // Set the
+                    localStorage.setItem("blogImage",data.secure_url);
                     toast({
                         title: "image uploaded",
                         description: "image uploaded successfully ",
@@ -89,18 +88,17 @@ export default function BlogImageUpload() {
             <p className='text-lg text-zinc-400 my-4'>Your images : </p>
             {imagePreview && (
                 <div>
-                    <Image
-                        width={500}
-                        height={0}
-                        src={imagePreview}
-                        alt="Preview"
+                    <img
+                    alt='Image'
+                        src={imagePreview?imagePreview:localStorage.getItem('blogImage') ??""}
                         className='rounded-lg lg:h-60 h-48 lg:w-[500px] w-40'
                     />
                 </div>
             )}
             <p className='text-white text-lg'>{isUploadingImage ? "uploading" : ""}</p>
             <button className='p-4 rounded-lg text-white text-lg border border-zinc-700 my-4' onClick={()=>{
-                if(imageUrl!==""){
+                const blogImage=localStorage.getItem('blogImage')
+                if(blogImage){
                     router.push("content")
                     return
                 }

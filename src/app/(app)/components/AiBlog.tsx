@@ -23,7 +23,7 @@ export default function AIBlog() {
     setIsProducing(true)
     const headingArray = data.heading.map((e) => { return e.title })
     
-    const prompt = `Write a blog such that it conatins all the essientials heading i am providing in an array here is an array ${[headingArray]} the blog should be such that is should use easy words and easy understandable grammer ,it should also follow all the seo strategies and should be should be seo rich and should contain all the essiantial keywords that is repeating in the this heading array,the blog content should be p,h1,h2,h3,h4 or list tage ,do not make a html template ,the presention of the blog should be beautiful ,use emojis don't use ** or # this to start a heading,use emojis such that the blog should look beautiful`
+    const prompt = `Write a blog such that it conatins all the essientials heading i am providing in an array here is an array [${headingArray}] the blog should be such that is should use easy words and easy understandable grammer ,it should also follow all the seo strategies and should be should be seo rich and should contain all the essiantial keywords that is repeating in the this heading array,the blog content should be p,h1,h2,h3,h4 or list tage ,do not make a html template ,the presention of the blog should be beautiful ,use emojis don't use ** or # this to start a heading,use emojis such that the blog should look beautiful`
     console.log(headingArray,prompt)
 
     const response=await axios.post("/api/AIshit",{
