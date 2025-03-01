@@ -3,7 +3,6 @@ import { authContext } from '@/app/context/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react'
 
@@ -62,7 +61,7 @@ export default function BlogImageUpload() {
         }
     };
     return (
-        <div className='p-20 flex flex-col'>
+        <div className='lg:p-20 p-8 flex flex-col'>
             {isUploadingImage && <Progress value={progress} className='my-4' />}
 
             <p className='text-lg text-zinc-400 my-4'>

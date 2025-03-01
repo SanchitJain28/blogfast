@@ -13,8 +13,8 @@ interface heading {
 
 export default function AIBlog() {
   const [heading, setHeading] = useState<heading[]>([{ title: "", id: 1 }])
-  const[AiBlog,setAiBlog]=useState<string|null>(null)
-  const[isProducing,setIsProducing]=useState<boolean>(false)
+  const [AiBlog, setAiBlog] = useState<string | null>(null)
+  const [isProducing, setIsProducing] = useState<boolean>(false)
   const { toast } = useToast()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(AiBlogSchemma)
@@ -22,13 +22,22 @@ export default function AIBlog() {
   const onSubmit = async (data: { heading: heading[] }) => {
     setIsProducing(true)
     const headingArray = data.heading.map((e) => { return e.title })
-    
-    const prompt = `Write a blog such that it conatins all the essientials heading i am providing in an array here is an array [${headingArray}] the blog should be such that is should use easy words and easy understandable grammer ,it should also follow all the seo strategies and should be should be seo rich and should contain all the essiantial keywords that is repeating in the this heading array,the blog content should be p,h1,h2,h3,h4 or list tage ,do not make a html template ,the presention of the blog should be beautiful ,use emojis don't use ** or # this to start a heading,use emojis such that the blog should look beautiful`
-    console.log(headingArray,prompt)
 
-    const response=await axios.post("/api/AIshit",{
-      prompt:prompt
-    })  
+    const prompt = `Generate a comprehensive and SEO-rich blog post based on the following headings: [${headingArray}].
+                    The blog should:
+                    * Address each heading as a distinct section.
+                    * Use simple, easy-to-understand language and grammar.
+                    * Incorporate relevant SEO strategies and keywords naturally.
+                    * Structure content using paragraphs (p), headings (h1, h2, h3, h4), and lists (ul, ol, li) as needed.
+                    * Avoid HTML template syntax; provide only the text content.
+                    * Present the information in a visually appealing manner using relevant emojis.
+                    * Do not include any introductory or concluding phrases like "Here is your blog" or "I have done."
+                    * Only provide the blog content.`
+    console.log(headingArray, prompt)
+
+    const response = await axios.post("/api/AIshit", {
+      prompt: prompt
+    })
     setAiBlog(response.data.text)
     setIsProducing(false)
     console.log(response)
@@ -65,10 +74,18 @@ export default function AIBlog() {
           setHeading([...heading, { title: "", id: Math.random() }])
         }} className='p-4 border border-zinc-600 text-white text-lg rounded-lg'>Add heading</button>
         <button type='submit' disabled={isProducing} className='text-white' >Submit </button>
-        <p className='text-white text-lg'>{isProducing?"Producing results":""}</p>
-        {/* <div dangerouslySetInnerHTML={{ __html: AiBlog?AiBlog:"" }} className='text-white text-xl'/> */}
-
-        <div className='text-white border border-zinc-400 focus:outline-none rounded-lg my-4 p-4 bg-black text-lg w-full min-h-40 ' dangerouslySetInnerHTML={{__html:AiBlog?AiBlog:""}} />
+        <p className='text-white text-lg'>{isProducing ? "Producing results" : ""}</p>
+        {/* {Mydocument} */}
+        {AiBlog ?
+          <div>
+            <div className='text-zinc-400 border border-zinc-700 focus:outline-none rounded-lg my-4 p-4 bg-black text-lg w-full min-h-40 ' dangerouslySetInnerHTML={{ __html: AiBlog ? AiBlog : "" }} />
+            <button onClick={()=>{
+              localStorage.setItem("blogContent",AiBlog)
+            }} className='border text-white border-zinc-300 rounded-lg px-4 py-2 my-4 mx-2'>Paste it in my blog content</button>
+          </div> :
+           <div>
+            <p></p>
+          </div>}
       </form>
     </div>
 

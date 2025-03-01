@@ -1,5 +1,5 @@
 "use client"
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react';
 import AIBlog from '../../components/AiBlog'
 import { Input } from '@/components/ui/input';
@@ -12,14 +12,15 @@ export default function BlogContent() {
 
     const [isUploading, setIsUploading] = useState(false);
     const [blogTitle, setBlogTitle] = useState<string | null>(null)
-    const [value, setValue] = useState('');
+    const [blogContent, setBlogContent] = useState<string>('');
+    const [blogImage,setBlogImage]=useState<string | null>(null)
     const onSubmit = async (event: React.FormEvent) => {
         const blogImage = localStorage.getItem('blogImage')
         event.preventDefault()
         setIsUploading(true)
         try {
             const response = await axios.post("/api/createBlog", {
-                content: value,
+                content: blogContent,
                 images: blogImage ? blogImage : "noImage"
             })
             console.log(response)
@@ -40,10 +41,17 @@ export default function BlogContent() {
             setIsUploading(false)
         }
     }
+    useEffect(()=>{
+        if(localStorage.getItem("blogImage")){
+            setBlogImage(localStorage.getItem("blogImage") as string)
+        }
+        if(localStorage.getItem("blogContent")){
+            setBlogContent(localStorage.getItem("blogContent") as string)
+        }
+    },[])
     return (
         <div>
             <form onSubmit={onSubmit}>
-                {/* <EditorContent className='bg-white mx-4 p-12' editor={editor} /> */}
                 <div className="p-8">
                     <div className="flex justify-between">
                         <p className='text-white text-xl font-sans '>{blogTitle ? blogTitle : "No title "}</p>
@@ -53,8 +61,9 @@ export default function BlogContent() {
                         setBlogTitle(e.target.value)
                     }} />
                     <Editor
+                    value={blogContent}
                         apiKey='6p1aqw5kkmimf1n9npynfg07vo395qljgid959bnynvrukmp'
-                        onInit={(_evt, editor) => editorRef.current = editor}
+                        onInit={(evt, editor) => editorRef.current = editor}
                         initialValue="<p>This is the initial content of the editor.</p>"
                         init={{
 
@@ -75,23 +84,21 @@ export default function BlogContent() {
 
                         }}
                         onEditorChange={(e) => {
-                            setValue(e)
+                            setBlogContent(e)
+                            localStorage.setItem("blogContent", e)
                             console.log(e)
                         }}
 
                     />
 
                 </div>
-                {/* <button type='submit' className="rounded-lg bg-black text-black  bg-white  border border-zinc-400 font-sans text-lg p-4">Save Blog</button> */}
-
             </form>
             <div className="flex justify-between ">
                 <div className="w-full">
                 <AIBlog />
-
                 </div>
-                <img src={localStorage.getItem("blogImage") ?? ""} className='w-80 h-80 mx-12 my-28 rounded-lg' />
-
+                {blogImage && <img src={blogImage} className='w-80 h-80 mx-12 my-28 hidden lg:block rounded-lg' />
+            }
             </div>
         </div>
     )
