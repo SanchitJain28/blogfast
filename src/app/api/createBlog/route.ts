@@ -9,11 +9,12 @@ cloudinary.config({
 export async function POST(request: NextRequest) {
     const supabase = await createClient()
     const {data:{user}}=await supabase.auth.getUser()
-    const {content,images}=await request.json()
+    const {content,images,title}=await request.json()
     try {
         const { error } = await supabase
             .from('blogs')
             .insert({
+                title:title,
                 blog_content: content,
                 images:{
                     imageURLs:[images]

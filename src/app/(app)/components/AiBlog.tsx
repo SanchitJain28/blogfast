@@ -23,16 +23,27 @@ export default function AIBlog() {
     setIsProducing(true)
     const headingArray = data.heading.map((e) => { return e.title })
 
-    const prompt = `Generate a comprehensive and SEO-rich blog post based on the following headings: [${headingArray}].
-                    The blog should:
-                    * Address each heading as a distinct section.
-                    * Use simple, easy-to-understand language and grammar.
-                    * Incorporate relevant SEO strategies and keywords naturally.
-                    * Structure content using paragraphs (p), headings (h1, h2, h3, h4), and lists (ul, ol, li) as needed.
-                    * Avoid HTML template syntax; provide only the text content.
-                    * Present the information in a visually appealing manner using relevant emojis.
-                    * Do not include any introductory or concluding phrases like "Here is your blog" or "I have done."
-                    * Only provide the blog content.`
+    const prompt = `Generate a comprehensive and SEO-rich blog post based on the following topics, treating each topic as a distinct section:
+  [${headingArray}]
+
+The blog should:
+
+* Address each topic from the above list as a distinct section.
+* Use simple, easy-to-understand language and grammar.
+* Incorporate relevant SEO strategies and keywords naturally.
+* Structure content using paragraphs like "<p>This is a paragraph.</p>", headings like "<h2>This is a heading</h2>", and lists like "<li>Item 1</li>" as needed.
+* Present the information in a visually appealing manner using relevant emojis.
+
+IMPORTANT: Provide ONLY the blog content. Do not include any introductory or concluding phrases like "Here is your blog" or "I have done." Respond in plain text without any Markdown, HTML, or other formatting markup. Provide only the blog content. Do not include any extra text.
+
+End the blog content with the delimiter [END]
+
+Example of wanted output:
+<h2>Why people party</h2>
+<p>people party to have fun</p>
+<li>to have fun</li>
+<li>to see friends</li>
+`
     console.log(headingArray, prompt)
 
     const response = await axios.post("/api/AIshit", {
@@ -79,11 +90,11 @@ export default function AIBlog() {
         {AiBlog ?
           <div>
             <div className='text-zinc-400 border border-zinc-700 focus:outline-none rounded-lg my-4 p-4 bg-black text-lg w-full min-h-40 ' dangerouslySetInnerHTML={{ __html: AiBlog ? AiBlog : "" }} />
-            <button onClick={()=>{
-              localStorage.setItem("blogContent",AiBlog)
+            <button onClick={() => {
+              localStorage.setItem("blogContent", AiBlog)
             }} className='border text-white border-zinc-300 rounded-lg px-4 py-2 my-4 mx-2'>Paste it in my blog content</button>
           </div> :
-           <div>
+          <div>
             <p></p>
           </div>}
       </form>
