@@ -17,7 +17,7 @@ export default function BlogContent() {
     const [blogImage, setBlogImage] = useState<string | null>(null)
     const onSubmit = async (event: React.FormEvent) => {
         const blogImage = localStorage.getItem('blogImage')
-        localStorage.setItem('blogPreview', blogContent ?? "No info of the blog")
+        localStorage.setItem('blogPreview', blogContent ?? "No info of the blog v")
         event.preventDefault()
         if (!blogImage) {
             toast({
