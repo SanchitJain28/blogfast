@@ -14,6 +14,7 @@ export function AuthContext({ children }: { children: React.ReactNode }) {
     setUser(user)
     console.log(user)
   }
+
   const[blogImage,setBlogImage]=useState(null)
   useEffect(() => {
     getUser()

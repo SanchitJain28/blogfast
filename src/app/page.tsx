@@ -6,15 +6,7 @@ import { authContext } from "./context/AuthContext";
 
 
 export default function Home() {
-  const { user, setUser } = useContext(authContext)
-  const getUser = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    setUser(user)
-  }
-  useEffect(() => {
-    getUser()
-  }, [])
+  const { user } = useContext(authContext)
   if (user) {
     return <div className="">
       <p className="text-white text-4xl my-8 mx-4 ">
