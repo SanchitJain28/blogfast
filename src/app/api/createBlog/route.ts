@@ -4,7 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 cloudinary.config({ 
     cloud_name: 'dgemvdcue', 
     api_key: process.env.CLOUDINARY_APIKEY, 
-    api_secret: process.env.CLODINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+    api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
 });
 export async function POST(request: NextRequest) {
     const supabase = await createClient()
