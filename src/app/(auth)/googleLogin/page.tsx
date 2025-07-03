@@ -14,7 +14,7 @@ export default function GoogleLogin() {
       const response = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: "http://localhost:3000/auth/callback",
+          redirectTo: "https://blogfast-phi.vercel.app/auth/callback",
         },
       });
 
