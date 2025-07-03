@@ -1,107 +1,48 @@
 "use client";
-import { toast } from "@/hooks/use-toast";
-import axios, { AxiosError } from "axios";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { AlertCircle, BookOpen } from "lucide-react";
+import { useBlogsCard } from "@/hooks/useBlogs";
+import { HeroSection } from "@/components/blogs/HeroSection";
+import BlogGrid from "./blog/BlogGrid";
+export default function BlogsPage() {
+  const { data: blogs, isPending, isError, refetch } = useBlogsCard();
 
-export interface blog {
-  id: string;
-  blog_content: string;
-  images: { imageURLs: string[] };
-}
-export default function Blogs() {
-  const [blogs, setBlogs] = useState<blog[] | []>([]);
-  const fetchBlogs = async () => {
-    try {
-      const response = await axios.get("/api/fetchBlogs");
-      console.log(response);
-      setBlogs(response.data.data);
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      toast({
-        title: "Fetch Blogs",
-        description: `Failed to fetch blogs because ${axiosError.response?.data}`,
-        className: "bg-red-500 text-black",
-      });
-    }
-  };
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
+  if (isError) {
+    return (
+      <Alert variant="destructive" className="mb-8">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription className="flex items-center justify-between">
+          <span>Failed to load blogs. Please try again.</span>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            Retry
+          </Button>
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
-    <div className="lg:mx-8 mx-2  lg:p-20 p-4 rounded-lg ">
-      <div className="flex flex-row justify-between">
-        {/* <Carousel className='m-auto my-8 w-1/2'>
-                    <CarouselContent>
-                        <CarouselItem className='rounded-lg '><img className='w-full h-full aspect-3/2' src='https://www.elegantthemes.com/blog/wp-content/uploads/2018/11/shutterstock_1049564585-960.jpg' /></CarouselItem>
-                        <CarouselItem><img src='https://www.elegantthemes.com/blog/wp-content/uploads/2018/11/shutterstock_1049564585-960.jpg' /></CarouselItem>
-                        <CarouselItem><img src='https://www.elegantthemes.com/blog/wp-content/uploads/2018/11/shutterstock_1049564585-960.jpg' /></CarouselItem>
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                </Carousel> */}
-        <div className=" py-8 my-8 px-8 border bg-blue-600 border-zinc-600 rounded-lg">
-          <p className="text-blank font-bold lg:text-2xl font-sans">
-            a unique platform where creativity meets artificial intelligence!
-            Explore a world of engaging, thought-provoking, and innovative blogs
-            generated with the help of AI. Whether you are looking for inspiring
-            stories, insightful articles, or captivating reads, our AI-powered
-            blog app brings you a seamless reading experience.
-          </p>
-          <div className="flex my-2">
-            <button className="text-white bg-black lg:py-4 py-2 lg:px-8 px-4  font-sans font-bold lg:text-lg rounded-lg basis-1/2 mr-2">
-              <Link href="/signUp" className="w-full">
-                Create Account
-              </Link>
-            </button>
-            <button className="text-white bg-black py-4 px-8 basis-1/2 font-sans font-bold lg:text-lg rounded-lg ">
-              <Link href="/login" className="w-full">
-                login
-              </Link>
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="container mx-auto px-4 py-8 lg:px-8 lg:py-12">
+        {/* Hero Section */}
+        <HeroSection />
+
+        {/* Blogs Section */}
+        <section className="mt-16">
+          <div className="flex items-center gap-3 mb-8">
+            <BookOpen className="h-8 w-8 text-primary" />
+            <h2 className="text-3xl font-bold text-foreground">Latest Blogs</h2>
+            <Badge variant="secondary" className="ml-auto">
+              {blogs?.length} {blogs?.length === 1 ? "Blog" : "Blogs"}
+            </Badge>
           </div>
-          <button className="text-white bg-black py-4 px-8 w-full font-sans  font-bold lg:text-lg rounded-lg ">
-            <Link href="/createBlog" className="w-full">
-              Create a blog
-            </Link>
-          </button>
-        </div>
-      </div>
 
-      <p className="text text-3xl text-zinc-500 font-sans mx-2">
-        Check out the latest Blogs
-      </p>
-      <div className="grid lg:grid-cols-4 grid-cols-1">
-        {blogs.map((e, index: number) => {
-          if (e.blog_content !== "") {
-            return (
-              <div
-                key={index}
-                className="my-4 border border-zinc-700  rounded-lg m-4"
-              >
-                <img
-                  src={e.images.imageURLs[0]}
-                  className="w-full h-60 rounded-lg"
-                />
+          {/* Blogs Grid */}
 
-                <p
-                  className="text text-zinc-300 font-sans lg:text-lg text-sm p-4 overflow-hidden "
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      e.blog_content.length > 300
-                        ? e.blog_content.slice(0, 500) + "..."
-                        : e.blog_content,
-                  }}
-                />
-                <Link href={`blogs/blog?blogId=${e.id}`}>
-                  <button className="px-4 py-2 border text-white">
-                    Read blog
-                  </button>
-                </Link>
-              </div>
-            );
-          }
-        })}
+          <BlogGrid blogs={blogs} isLoading={isPending} />
+        </section>
       </div>
     </div>
   );

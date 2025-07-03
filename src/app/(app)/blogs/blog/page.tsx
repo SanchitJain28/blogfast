@@ -1,37 +1,32 @@
-"use client";
-import React, { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+"use client"
 
-import axios from "axios";
-import { blog } from "../page";
-import { toast } from "@/hooks/use-toast";
-import BlogDisplayer from "../../components/blogDisplayer";
+import { BlogPageContent } from "@/components/blog/blogPageContent"
+import { Suspense } from "react"
 
-export default function Page() {
-  const params = useSearchParams();
-  const [blog, setBlog] = React.useState<blog | null>(null);
-  const fetchBlog = async () => {
-    try {
-      const response = await axios.get(
-        `/api/FetchSingleBlog?blogId=${params.get("blogId")}`
-      );
-      console.log(response.data.data[0]);
-      console.log(response.data.data[0].blog_content);
-      setBlog(response.data.data[0]);
-    } catch (error) {
-      toast({
-        title: "Fetch Blog",
-        description: `Failed to fetch blog because ${error}`,
-      });
-    }
-  };
-  useEffect(() => {
-    fetchBlog();
-  }, []);
-
+export default function BlogPage() {
   return (
-    <div className="py-20">
-      {blog?.blog_content && <BlogDisplayer>{blog.blog_content}</BlogDisplayer>}{" "}
+    <Suspense fallback={<BlogPageSkeleton />}>
+      <BlogPageContent />
+    </Suspense>
+  )
+}
+
+function BlogPageSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="animate-pulse">
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-8"></div>
+          <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2 mb-8"></div>
+          <div className="h-64 bg-slate-200 dark:bg-slate-700 rounded mb-8"></div>
+          <div className="space-y-4">
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/6"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

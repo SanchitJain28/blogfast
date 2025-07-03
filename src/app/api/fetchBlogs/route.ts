@@ -1,27 +1,35 @@
 import { createClient } from "@/app/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-    const supabase = await createClient()
-    try {
-        const { data, error } = await supabase
-            .from('blogs')
-            .select()
-        if(error){
-            return NextResponse.json({
-                success: false,
-                message: error
-            }, { status: 500 })
-        }
-        return NextResponse.json({
-            success:true,
-            data: data
-        }, { status: 200 })
-    } catch (error) {
-        return NextResponse.json({
-            success:false,
-            message:error
-        })
+export async function GET() {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.rpc("get_tweet_card");
+    if (error) {
+      return NextResponse.json(
+        {
+          status: false,
+          message: "Unexpected error occured",
+          error,
+        },
+        { status: 401 }
+      );
     }
-
+    return NextResponse.json(
+      {
+        status: true,
+        data,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      {
+        status: false,
+        message: "Unexpected error occured",
+      },
+      { status: 501 }
+    );
+  }
 }
