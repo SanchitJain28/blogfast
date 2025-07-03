@@ -1,12 +1,11 @@
 import { createClient } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
 import { Chrome } from "lucide-react";
 import React from "react";
+import { toast } from "react-toastify";
 
 export default function GoogleLogin() {
-  const { toast } = useToast();
   const LoginBygoogle = async () => {
     const supabase = createClient();
     try {
@@ -22,11 +21,7 @@ export default function GoogleLogin() {
       const axiosError = error as AxiosError;
       console.log(axiosError.response?.data);
 
-      toast({
-        title: "Login",
-        description: " login un succesful ",
-        className: "bg-red-500 text-black",
-      });
+      toast(" login un-successful ");
     }
   };
   return (

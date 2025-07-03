@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
@@ -21,10 +20,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function BlogImageUpload() {
   const router = useRouter();
-  const { toast } = useToast();
 
   const [imagePreview, setImagePreview] = useState<string>("");
   const [, setImageUrl] = useState<string>("");
@@ -90,21 +89,13 @@ export default function BlogImageUpload() {
         setProgress(100);
         setUploadComplete(true);
 
-        toast({
-          title: "Success!",
-          description: "Image uploaded successfully",
-          className: "bg-green-500 text-white border-green-500",
-        });
+        toast("Success! , Image uploaded successfully");
       } else {
         throw new Error("Upload failed");
       }
     } catch (error) {
       console.error("Error uploading image:", error);
-      toast({
-        title: "Upload Failed",
-        description: "Failed to upload image. Please try again.",
-        variant: "destructive",
-      });
+      toast("Upload Failed, Failed to upload image. Please try again.");
       setImagePreview("");
       setImageUrl("");
     } finally {
@@ -156,11 +147,7 @@ export default function BlogImageUpload() {
     if (blogImage) {
       router.push("content");
     } else {
-      toast({
-        title: "Image Required",
-        description: "Please upload at least one image to continue",
-        variant: "destructive",
-      });
+      toast("Image Required, Please upload at least one image to continue");
     }
   };
 

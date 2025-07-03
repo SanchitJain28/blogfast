@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -29,7 +28,6 @@ import {
   ArrowRight,
   AlertCircle,
   Loader2,
-  Github,
   Sparkles,
   Shield,
   CheckCircle,
@@ -37,6 +35,7 @@ import {
 import GoogleLogin from "../googleLogin/page";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/authContext";
+import { toast } from "react-toastify";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -48,7 +47,6 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { user } = useAuth();
-  const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -89,11 +87,7 @@ export default function LoginPage() {
 
       console.log(loginData);
 
-      toast({
-        title: "Welcome back! 👋",
-        description: "You have been signed in successfully",
-        className: "bg-green-500 text-white border-green-500",
-      });
+      toast("You have been signed in successfully");
 
       // Redirect to intended page or home
       const redirectTo =
@@ -104,22 +98,11 @@ export default function LoginPage() {
       const errorMessage = "Invalid email or password";
 
       setApiError(errorMessage);
-      toast({
-        title: "Sign In Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+
+      toast("Sign In Failed");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSocialLogin = (provider: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${provider} sign in will be available soon!`,
-      variant: "default",
-    });
   };
 
   if (user) {
@@ -166,16 +149,6 @@ export default function LoginPage() {
             {/* Social Sign In */}
             <div className="space-y-3">
               <GoogleLogin />
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full bg-transparent"
-                onClick={() => handleSocialLogin("GitHub")}
-              >
-                <Github className="h-4 w-4 mr-2" />
-                Continue with GitHub
-              </Button>
             </div>
 
             <div className="relative">

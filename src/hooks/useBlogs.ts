@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "@/hooks/use-toast";
 import axios, { type AxiosError } from "axios";
 import type { Blog } from "@/type";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface UseBlogsReturn {
   blogs: Blog[];
@@ -50,11 +50,7 @@ export function useBlogs(): UseBlogsReturn {
 
       setError(errorMessage as string);
 
-      toast({
-        title: "Error",
-        description: `Failed to fetch blogs: ${errorMessage}`,
-        variant: "destructive",
-      });
+      toast(`Failed to fetch blogs: ${errorMessage}`);
     } finally {
       setLoading(false);
     }

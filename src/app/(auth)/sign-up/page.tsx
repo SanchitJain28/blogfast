@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -32,6 +31,7 @@ import {
   User,
 } from "lucide-react";
 import GoogleLogin from "../googleLogin/page";
+import { toast } from "react-toastify";
 
 const signUpSchema = z
   .object({
@@ -57,7 +57,6 @@ const signUpSchema = z
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
-  const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -112,11 +111,7 @@ export default function SignUpPage() {
 
       console.log(user.id);
 
-      toast({
-        title: "Welcome aboard! 🎉",
-        description: "Your account has been created successfully",
-        className: "bg-green-500 text-white border-green-500",
-      });
+      toast("Welcome aboard! 🎉 , Your account has been created successfully");
 
       router.push(`/on-boarding?id=${user.id}`);
     } catch (error) {
@@ -124,11 +119,7 @@ export default function SignUpPage() {
       const errorMessage = "Something went wrong. Please try again.";
 
       setApiError(errorMessage);
-      toast({
-        title: "Sign Up Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast("Sign Up Failed");
     } finally {
       setIsLoading(false);
     }

@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
@@ -28,6 +27,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { AIBlogAssistant } from "@/components/createBlog/AiBlogAssistant";
+import { toast } from "react-toastify";
 
 interface BlogData {
   title: string;
@@ -36,7 +36,7 @@ interface BlogData {
 }
 
 export default function BlogContent() {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<unknown>(null);
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -119,29 +119,17 @@ export default function BlogContent() {
 
   const validateBlog = (): boolean => {
     if (!blogData.title.trim()) {
-      toast({
-        title: "Title Required",
-        description: "Please add a title for your blog post",
-        variant: "destructive",
-      });
+      toast("Title Required, Please add a title for your blog post");
       return false;
     }
 
     if (!blogData.content.trim()) {
-      toast({
-        title: "Content Required",
-        description: "Please add some content to your blog post",
-        variant: "destructive",
-      });
+      toast("Content Required, Please add some content to your blog post");
       return false;
     }
 
     if (!blogData.image) {
-      toast({
-        title: "Image Required",
-        description: "Please upload an image for your blog post",
-        variant: "destructive",
-      });
+      toast("Image Required, Please upload an image for your blog post");
       return false;
     }
 
@@ -169,11 +157,7 @@ export default function BlogContent() {
 
       console.log(data);
 
-      toast({
-        title: "Success!",
-        description: "Your blog has been published successfully",
-        className: "bg-green-500 text-white",
-      });
+      toast("Your blog has been published successfully");
 
       // Clear saved data
       localStorage.removeItem("blogImage");
@@ -183,12 +167,7 @@ export default function BlogContent() {
       router.push("final");
     } catch (error) {
       console.error("Submission error:", error);
-      toast({
-        title: "Publication Failed",
-        description:
-          "An error occurred while publishing your blog. Please try again.",
-        variant: "destructive",
-      });
+      toast("Publication Failed");
     } finally {
       setIsUploading(false);
     }
