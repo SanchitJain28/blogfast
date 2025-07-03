@@ -1,3 +1,5 @@
+"use client";
+
 import { createClient } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
